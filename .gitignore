@@ -1,0 +1,12 @@
+# 環境変数（APIキー）- 絶対にコミットしない
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# macOS
+.DS_Store

@@ -1,0 +1,30 @@
+{
+  "model": "claude-opus-4-6",
+  "max_tokens": 16000,
+  "agents": {
+    "cso": {
+      "name": "CSO（戦略責任者）",
+      "role": "strategy",
+      "description": "コンテンツ戦略の企画立案、ターゲット分析、KPI設定を担当",
+      "prompt_file": "agents/prompts/cso.md"
+    },
+    "cco": {
+      "name": "CCO（編集責任者）",
+      "role": "editorial",
+      "description": "コンテンツ編集・品質管理、スタイルガイド、SEO最適化を担当",
+      "prompt_file": "agents/prompts/cco.md"
+    },
+    "cpo": {
+      "name": "CPO（制作責任者）",
+      "role": "production",
+      "description": "コンテンツ制作の実行、記事・スクリプト・クリエイティブ制作を担当",
+      "prompt_file": "agents/prompts/cpo.md"
+    },
+    "cdo": {
+      "name": "CDO（データ責任者）",
+      "role": "analytics",
+      "description": "パフォーマンス分析、インサイト抽出、改善提案を担当",
+      "prompt_file": "agents/prompts/cdo.md"
+    }
+  }
+}
