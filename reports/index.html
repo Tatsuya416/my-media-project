@@ -3,71 +3,122 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AIエージェント レポート一覧</title>
+  <title>Media Strategy Reports — 一覧</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans",
-                   "Noto Sans JP", sans-serif;
-      background: #f5f5f7;
-      color: #1d1d1f;
-      padding: 48px 20px 64px;
+      font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans JP", sans-serif;
+      background: #F1F5F9;
+      color: #0F172A;
+      padding: 48px 24px 80px;
+      line-height: 1.6;
     }
-    .container { max-width: 760px; margin: 0 auto; }
-    .card {
+    .container { max-width: 860px; margin: 0 auto; }
+    .page-label {
+      font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; color: #64748B; margin-bottom: 6px;
+    }
+    h1 { font-size: 1.6rem; font-weight: 700; margin-bottom: 4px; letter-spacing: -0.02em; }
+    .page-meta { font-size: 0.85rem; color: #64748B; margin-bottom: 36px; }
+    .reports-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+    }
+    .report-card {
       background: #fff;
-      border-radius: 16px;
-      box-shadow: 0 2px 24px rgba(0,0,0,0.07);
-      padding: 36px 40px;
+      border: 1px solid #E2E8F0;
+      border-radius: 12px;
+      padding: 20px 24px;
+      transition: box-shadow 0.15s;
     }
-    h1 { font-size: 1.4rem; font-weight: 700; margin-bottom: 6px; }
-    .meta { font-size: 0.85rem; color: #6e6e73; margin-bottom: 28px; }
-    table { width: 100%; border-collapse: collapse; }
-    th {
-      text-align: left;
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: #6e6e73;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      padding: 0 12px 10px 0;
-      border-bottom: 1px solid #e5e5ea;
+    .report-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+    .report-card-latest { border-color: #1E3A5F; border-width: 2px; }
+    .report-card-meta {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 0.78rem; color: #64748B; margin-bottom: 10px;
     }
-    td {
-      padding: 12px 12px 12px 0;
-      border-bottom: 1px solid #f0f0f5;
-      font-size: 0.9rem;
+    .latest-badge {
+      background: #1E3A5F; color: #fff;
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.05em;
+      padding: 2px 7px; border-radius: 4px; text-transform: uppercase;
     }
-    tr:last-child td { border-bottom: none; }
-    a { color: #0071e3; text-decoration: none; font-weight: 500; }
-    a:hover { text-decoration: underline; }
+    .report-label { font-size: 0.95rem; font-weight: 600; margin-bottom: 14px; color: #0F172A; }
+    .report-link {
+      font-size: 0.85rem; font-weight: 600; color: #1E3A5F;
+      text-decoration: none; border-bottom: 1px solid #1E3A5F;
+      padding-bottom: 1px;
+    }
+    .report-link:hover { opacity: 0.7; }
     .footer {
-      text-align: center;
-      font-size: 0.78rem;
-      color: #aeaeb2;
-      margin-top: 20px;
+      text-align: center; font-size: 0.75rem;
+      color: #94A3B8; margin-top: 48px;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <div class="card">
-      <h1>🤖 AIエージェント レポート一覧</h1>
-      <div class="meta">メディアプロジェクト — 実行履歴</div>
-      <table>
-        <thead>
-          <tr>
-            <th>日付</th><th>時刻</th><th>種別</th><th>リンク</th>
-          </tr>
-        </thead>
-        <tbody>
-<tr><td>2026-04-01</td><td>16:04:58</td><td>demo</td><td><a href="2026-04-01_16-04-58_demo.html">開く →</a></td></tr>
-<tr><td>2026-04-01</td><td>14:21:01</td><td>demo</td><td><a href="2026-04-01_14-21-01_demo.html">開く →</a></td></tr>
-<tr><td>2026-04-01</td><td>14:13:13</td><td>demo</td><td><a href="2026-04-01_14-13-13_demo.html">開く →</a></td></tr>
-        </tbody>
-      </table>
+    <div class="page-label">Media Company OS</div>
+    <h1>Strategy Reports</h1>
+    <div class="page-meta">全レポート一覧 — 6 件</div>
+    <div class="reports-grid">
+      
+        <div class="report-card report-card-latest">
+          <div class="report-card-meta">
+            <span class="latest-badge">最新</span>
+            <span class="report-date">2026-04-02</span>
+            <span class="report-time">00:00:04</span>
+          </div>
+          <div class="report-label">issue-analysis</div>
+          <a class="report-link" href="2026-04-02_00-00-04_issue-analysis.html">レポートを開く →</a>
+        </div>
+        <div class="report-card ">
+          <div class="report-card-meta">
+            
+            <span class="report-date">2026-04-01</span>
+            <span class="report-time">issue:analysis</span>
+          </div>
+          <div class="report-label"></div>
+          <a class="report-link" href="2026-04-01_issue-analysis.html">レポートを開く →</a>
+        </div>
+        <div class="report-card ">
+          <div class="report-card-meta">
+            
+            <span class="report-date">2026-04-01</span>
+            <span class="report-time">16:23:32</span>
+          </div>
+          <div class="report-label">demo</div>
+          <a class="report-link" href="2026-04-01_16-23-32_demo.html">レポートを開く →</a>
+        </div>
+        <div class="report-card ">
+          <div class="report-card-meta">
+            
+            <span class="report-date">2026-04-01</span>
+            <span class="report-time">16:04:58</span>
+          </div>
+          <div class="report-label">demo</div>
+          <a class="report-link" href="2026-04-01_16-04-58_demo.html">レポートを開く →</a>
+        </div>
+        <div class="report-card ">
+          <div class="report-card-meta">
+            
+            <span class="report-date">2026-04-01</span>
+            <span class="report-time">14:21:01</span>
+          </div>
+          <div class="report-label">demo</div>
+          <a class="report-link" href="2026-04-01_14-21-01_demo.html">レポートを開く →</a>
+        </div>
+        <div class="report-card ">
+          <div class="report-card-meta">
+            
+            <span class="report-date">2026-04-01</span>
+            <span class="report-time">14:13:13</span>
+          </div>
+          <div class="report-label">demo</div>
+          <a class="report-link" href="2026-04-01_14-13-13_demo.html">レポートを開く →</a>
+        </div>
     </div>
-    <div class="footer">メディアプロジェクト AIエージェントシステム</div>
+    <div class="footer">Media Company OS — 意思決定レポートシステム</div>
   </div>
 </body>
 </html>

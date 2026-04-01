@@ -40,6 +40,38 @@ class CSOAgent(Agent):
 """
         return self.ask(prompt)
 
+    def find_amplifying_tactics(
+        self,
+        cdo_output: str,
+        trend_data: str = "",
+    ) -> str:
+        """CDOの分析に外部トレンドを重ねて、効果の高い施策を導く"""
+        trend_section = (
+            f"外部トレンド情報:\n{trend_data}"
+            if trend_data
+            else "（外部トレンド情報なし — あなたの知識から市場動向を補完してください）"
+        )
+        prompt = f"""
+CDOから以下の分析・改善提案が出ています。
+この提案に対して、外部トレンドも加味した上で「さらに効く施策」を見つけてください。
+
+【CDOの分析・改善提案】
+{cdo_output}
+
+【外部トレンド】
+{trend_section}
+
+以下の形式で出力してください:
+
+## 1. CDOの示唆の要約
+## 2. 外部トレンドから見つかった追い風
+## 3. 追加で試すべき施策
+## 4. なぜその施策が効くのか
+## 5. 優先順位
+## 6. すぐ試す案 / 中期で試す案
+"""
+        return self.ask(prompt)
+
     def set_kpis(self, timeframe: str, current_metrics: dict) -> str:
         """KPIを設定する"""
         metrics_str = "\n".join(f"- {k}: {v}" for k, v in current_metrics.items())
