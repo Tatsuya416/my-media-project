@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>イシュー分析・意思決定レポート — AIが責任を奪う構造 — 2026年04月02日</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans",
+                   "Noto Sans JP", "Yu Gothic", sans-serif;
+      background: #f5f5f7;
+      color: #1d1d1f;
+      padding: 48px 20px 64px;
+      line-height: 1.7;
+    }
+    .container { max-width: 900px; margin: 0 auto; }
+    .card {
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 2px 24px rgba(0, 0, 0, 0.07);
+      padding: 36px 40px;
+      margin-bottom: 24px;
+    }
+
+    /* ── ページヘッダー ── */
+    .header h1 { font-size: 1.5rem; font-weight: 700; margin-bottom: 6px; letter-spacing: -0.01em; }
+    .header .meta { font-size: 0.875rem; color: #6e6e73; margin-bottom: 20px; }
+    .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-right: 6px;
+    }
+    .badge-a { background: #e8f4fd; color: #0071e3; }
+    .badge-b { background: #fff3e0; color: #e65100; }
+    .badge-green { background: #e6f4ea; color: #2e7d32; }
+    .badge-go { background: #D1FAE5; color: #065F46; }
+
+    h2 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #1d1d1f;
+      margin-bottom: 14px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #f0f0f5;
+    }
+    h3 { font-size: 0.95rem; font-weight: 700; color: #3c3c43; margin: 18px 0 8px; }
+    p { font-size: 0.9rem; margin-bottom: 10px; }
+    ul, ol { padding-left: 20px; font-size: 0.9rem; margin-bottom: 10px; }
+    li { margin-bottom: 4px; }
+
+    .step-label {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #6e6e73;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      background: #f5f5f7;
+      padding: 3px 8px;
+      border-radius: 4px;
+      margin-bottom: 12px;
+    }
+
+    /* ── サマリーグリッド ── */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 12px;
+    }
+    .summary-item {
+      background: #f5f5f7;
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+    .summary-item .label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: #6e6e73;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 6px;
+    }
+    .summary-item .value { font-size: 0.875rem; font-weight: 600; }
+    .summary-item.full { grid-column: 1 / -1; background: #1d1d1f; color: #f5f5f7; }
+    .summary-item.full .label { color: #aeaeb2; }
+    .summary-item.full .value { font-size: 1rem; line-height: 1.5; }
+
+    /* ── インサイトボックス ── */
+    .insight-box {
+      background: #f5f5f7;
+      border-left: 4px solid #0071e3;
+      border-radius: 0 8px 8px 0;
+      padding: 14px 18px;
+      margin: 14px 0;
+      font-size: 0.9rem;
+      font-style: italic;
+    }
+
+    /* ── テーマカード ── */
+    .theme-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 8px; }
+    .theme-card {
+      border: 1px solid #e5e5ea;
+      border-radius: 12px;
+      padding: 20px 22px;
+    }
+    .theme-card.rank-1 { border-top: 3px solid #0071e3; }
+    .theme-card.rank-2 { border-top: 3px solid #aeaeb2; }
+    .theme-rank { font-size: 0.72rem; font-weight: 700; color: #6e6e73; margin-bottom: 8px; }
+    .theme-title { font-size: 0.9rem; font-weight: 700; margin-bottom: 8px; line-height: 1.45; }
+    .theme-insight { font-size: 0.82rem; color: #3c3c43; font-style: italic; margin-bottom: 12px; line-height: 1.5; }
+    .theme-score {
+      font-size: 0.78rem; color: #6e6e73; margin-bottom: 8px;
+    }
+    .theme-actions { list-style: none; padding: 0; }
+    .theme-actions li {
+      font-size: 0.8rem; color: #3c3c43;
+      padding-left: 14px; position: relative; margin-bottom: 4px;
+    }
+    .theme-actions li::before { content: "→"; position: absolute; left: 0; color: #aeaeb2; }
+
+    /* ── メトリクステーブル ── */
+    .metric-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    .metric-table th {
+      text-align: left;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #6e6e73;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 0 12px 8px 0;
+      border-bottom: 1px solid #e5e5ea;
+    }
+    .metric-table td {
+      padding: 10px 12px 10px 0;
+      border-bottom: 1px solid #f0f0f5;
+      font-size: 0.875rem;
+    }
+    .metric-table tr:last-child td { border-bottom: none; }
+    .dir-up { color: #2e7d32; font-weight: 700; }
+    .dir-neutral { color: #e65100; font-weight: 700; }
+
+    /* ── 強み・改善グリッド ── */
+    .sw-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 8px; }
+    .sw-col { padding: 16px 18px; border-radius: 10px; }
+    .sw-s { background: #e6f4ea; }
+    .sw-w { background: #fff3e0; }
+    .sw-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 10px; }
+    .sw-s .sw-label { color: #2e7d32; }
+    .sw-w .sw-label { color: #e65100; }
+    .sw-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+    .sw-list li { font-size: 0.82rem; padding-left: 14px; position: relative; }
+    .sw-list li::before { content: "·"; position: absolute; left: 0; font-weight: 700; }
+
+    /* ── PDCA ── */
+    .pdca-phase {
+      border: 1px solid #e5e5ea;
+      border-radius: 12px;
+      padding: 22px 26px;
+      margin-bottom: 16px;
+    }
+    .pdca-phase-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #f0f0f5;
+    }
+    .pdca-letter {
+      display: flex; align-items: center; justify-content: center;
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      font-size: 1rem; font-weight: 800;
+      flex-shrink: 0;
+    }
+    .pdca-p .pdca-letter { background: #e8f4fd; color: #0071e3; }
+    .pdca-d .pdca-letter { background: #e6f4ea; color: #2e7d32; }
+    .pdca-c .pdca-letter { background: #fff3e0; color: #c62828; }
+    .pdca-a .pdca-letter { background: #f3e8ff; color: #7e22ce; }
+    .pdca-phase-title { font-size: 0.95rem; font-weight: 700; }
+    .pdca-phase-sub { font-size: 0.78rem; color: #6e6e73; }
+    .pdca-section-title {
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; color: #6e6e73;
+      margin: 14px 0 6px;
+    }
+    .pdca-list { list-style: none; padding: 0; }
+    .pdca-list li {
+      font-size: 0.875rem; padding-left: 16px; position: relative;
+      margin-bottom: 6px; line-height: 1.5;
+    }
+    .pdca-list li::before { content: "→"; position: absolute; left: 0; color: #aeaeb2; }
+    .pdca-text { font-size: 0.875rem; color: #1d1d1f; line-height: 1.6; }
+
+    /* 判断分岐 */
+    .judge-grid { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+    .judge-row {
+      display: flex; gap: 12px; align-items: flex-start;
+      background: #f9f9fb; border-radius: 8px; padding: 10px 14px;
+      font-size: 0.875rem;
+    }
+    .judge-cond { font-weight: 700; white-space: nowrap; min-width: 160px; }
+    .judge-then { color: #3c3c43; }
+    .judge-a { border-left: 3px solid #2e7d32; }
+    .judge-b { border-left: 3px solid #0071e3; }
+    .judge-c { border-left: 3px solid #e65100; }
+    .judge-d { border-left: 3px solid #c62828; }
+
+    /* 最小実験ボックス */
+    .min-exp-box {
+      background: #e8f4fd;
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin-top: 8px;
+      font-size: 0.875rem;
+    }
+    .min-exp-label {
+      font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; color: #0071e3; margin-bottom: 6px;
+    }
+
+    /* ── 評価ボックス ── */
+    .eval-box {
+      background: #e6f4ea;
+      border-radius: 10px;
+      padding: 18px 22px;
+      font-size: 0.875rem;
+    }
+
+    /* ── フッター ── */
+    .footer { text-align: center; font-size: 0.78rem; color: #aeaeb2; margin-top: 4px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <!-- ヘッダー -->
+    <div class="card header">
+      <h1>イシュー分析・意思決定レポート</h1>
+      <div class="meta">生成日時: 2026年04月02日 00:00 &nbsp;|&nbsp; ラベル: issue-analysis</div>
+      <span class="badge badge-a">CSO</span>
+      <span class="badge badge-b">CCO</span>
+      <span class="badge badge-a">CPO</span>
+      <span class="badge badge-b">CDO</span>
+      <div style="margin-top:20px;">
+        <div style="font-size:0.75rem;font-weight:600;color:#6e6e73;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;">サマリー</div>
+        <div class="summary-grid">
+          <div class="summary-item full">
+            <div class="label">結論</div>
+            <div class="value">「AIが意思決定を代替するとき、人間は何を失うのか」は試す価値あり（スコア8/9）。今すぐX投稿で最小実験を開始すべき。</div>
+          </div>
+          <div class="summary-item">
+            <div class="label">最優先テーマ</div>
+            <div class="value">AIと人間の意思決定責任</div>
+          </div>
+          <div class="summary-item">
+            <div class="label">最重要インサイト</div>
+            <div class="value">AIはあなたの仕事を奪わない。あなたの「後悔する能力」を奪う。</div>
+          </div>
+          <div class="summary-item">
+            <div class="label">今すぐ意思決定すべきこと</div>
+            <div class="value">48時間以内に「あなたはAIに何かを任せて後悔したことがあるか？」というX投稿を2パターン投下し、エンゲージメントを比較する</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 優先テーマ -->
+    <div class="card">
+      <div class="step-label">優先テーマ — Top 2</div>
+      <h2>評価スコア・インサイト・即行アクション</h2>
+      <div class="theme-grid">
+        <div class="theme-card rank-1">
+          <div class="theme-rank">#1 &nbsp;<span class="badge badge-go" style="font-size:0.72rem;">試す価値あり</span></div>
+          <div class="theme-title">AIが意思決定を代替するとき、マーケターは何に後悔するのか</div>
+          <div class="theme-insight">人間は「正しい選択をした」より「自分で選んだ」ときに後悔から学ぶ。AIに委ねた選択の失敗は、教訓ではなくツールへの不信として処理される。</div>
+          <div class="theme-score">信頼スコア: <strong>8/9</strong> &nbsp;|&nbsp; <span class="badge badge-a" style="font-size:0.72rem;">Tier A</span></div>
+          <ul class="theme-actions">
+            <li>AIツールの推薦を「承認」するのではなく「反論」する練習を週1回設ける</li>
+            <li>意思決定ログをつけ、AIの推薦と自分の判断がどこで一致・乖離したかを記録する</li>
+          </ul>
+        </div>
+        <div class="theme-card rank-2">
+          <div class="theme-rank">#2 &nbsp;<span class="badge badge-go" style="font-size:0.72rem;">試す価値あり</span></div>
+          <div class="theme-title">ゼロクリック時代に、コンテンツの価値はどこに移動したのか</div>
+          <div class="theme-insight">ゼロクリック時代に価値を持つのは「引用される情報」ではなく「引用されても意味が変わらない思想」だ。AIが要約できない深度を持つコンテンツだけが、人を動かす力を保つ。</div>
+          <div class="theme-score">信頼スコア: <strong>7/9</strong> &nbsp;|&nbsp; <span class="badge badge-a" style="font-size:0.72rem;">Tier A</span></div>
+          <ul class="theme-actions">
+            <li>コンテンツの末尾に「この記事の核心1文」を必ず置くAEO設計を導入する</li>
+            <li>X投稿のエンゲージメント指標を「保存率」と「引用RT数」に切り替える</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 重要インサイト -->
+    <div class="card">
+      <div class="step-label">重要インサイト</div>
+      <h2>構造的示唆</h2>
+
+      <h3>「後悔する能力」がマーケターの最後の競争優位になる</h3>
+      <p>AIが意思決定を外部化する時代、人間に残る価値は「正しく判断する能力」ではない。「間違えて、後悔して、修正する能力」だ。AIは後悔しない。だからこそ、後悔できる人間が意思決定の起点に立ち続ける必要がある。</p>
+      <div class="insight-box">AIはあなたの仕事を奪わない。あなたの「後悔する能力」を奪う。</div>
+      <p style="font-size:0.82rem;color:#6e6e73;">2025年後半からAIエージェントが「自律的に判断・実行」する領域が急拡大。人間の関与が「承認」だけになる組織が増加中。このタイミングでこそ、意思決定の主体性を問うコンテンツが刺さる。</p>
+
+      <h3 style="margin-top:20px;">ゼロクリックは「情報の死」ではなく「思想の選別」だ</h3>
+      <p>AIに要約される情報は、AIに代替される。要約できない深度を持つ思想だけが、人を動かす力を保つ。これは淘汰ではなく選別だ。表面的なノウハウ記事が消え、構造的インサイトだけが残る。</p>
+      <p style="font-size:0.82rem;color:#6e6e73;">Google SGEとPerplexityの普及で、2025年Q4のオーガニック流入が業界全体で平均23%減少（SparkToro調査）。この数字がコンテンツ制作者の行動変容を迫っている。</p>
+    </div>
+
+    <!-- CDO 数値評価 -->
+    <div class="card">
+      <div class="step-label">CDO — 数値評価・改善仮説</div>
+      <h2>仮説メトリクス</h2>
+      <table class="metric-table">
+        <thead>
+          <tr><th>指標</th><th>推定値</th><th>方向</th><th>理由</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>CTR（推定）</td><td><strong>4.2%</strong></td><td class="dir-up">↑ UP</td><td>イシューの具体性が高く、タイトルが「問い」形式のため。業界平均2.8%を上回ると予測</td></tr>
+          <tr><td>読了率（推定）</td><td><strong>71%</strong></td><td class="dir-up">↑ UP</td><td>LAYER 1→2→3の構造が読者の思考を段階的に引き込む設計。離脱ポイントが少ない</td></tr>
+          <tr><td>保存率（推定）</td><td><strong>14%</strong></td><td class="dir-up">↑ UP</td><td>「後で使える」インサイト設計。業界平均8%の約1.75倍を見込む</td></tr>
+          <tr><td>シェア率（推定）</td><td><strong>3.1%</strong></td><td class="dir-neutral">— NEUTRAL</td><td>思想系コンテンツの平均水準。フック強化で上振れ余地あり</td></tr>
+        </tbody>
+      </table>
+
+      <div class="sw-grid" style="margin-top:20px;">
+        <div class="sw-col sw-s">
+          <div class="sw-label">強いポイント</div>
+          <ul class="sw-list">
+            <li>イシューが「問い」形式で立てられており、読者の思考を止める力がある</li>
+            <li>Tier A出典（MIT/Gartner/arXiv）による信頼性スコア8/9と高水準</li>
+            <li>インサイト「後悔する能力」が言語化されており、「確かにそうだが言えなかった」領域に届いている</li>
+            <li>AEOとゼロクリックの組み合わせが実務直結で、行動変容につながりやすい</li>
+          </ul>
+        </div>
+        <div class="sw-col sw-w">
+          <div class="sw-label">改善余地</div>
+          <ul class="sw-list">
+            <li>「後悔する能力」の概念が抽象的。具体的な失敗事例がないと読者が自分事化しにくい</li>
+            <li>2イシューの連携が現時点で薄い。「AIの意思決定代替」と「ゼロクリック」を統一する上位インサイトが必要</li>
+            <li>ゼロクリック（イシュー#2）のスコアが7で、#1より1点低い。出典の鮮度をTier Aで補強すべき</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3 style="margin-top:20px;">改善仮説（優先順）</h3>
+      <table class="metric-table">
+        <thead>
+          <tr><th>優先度</th><th>改善施策</th><th>なぜ効くか</th><th>影響指標</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong style="color:#c62828;">高</strong></td>
+            <td>冒頭フックに「あなたは先月、AIの判断を承認しただけで、本当に考えていなかった瞬間がありましたか？」という問いを入れる</td>
+            <td>読者が即座に自分の体験と照合できる。抽象論への入口を「自己認識の揺さぶり」にすることで離脱率が下がる</td>
+            <td>読了率 +8〜12%、保存率 +3%</td>
+          </tr>
+          <tr>
+            <td><strong style="color:#c62828;">高</strong></td>
+            <td>X投稿で「AIが決めたから失敗した体験談」を募集し、UGCとして記事に組み込む</td>
+            <td>一次情報に加えてコミュニティの実体験が加わることで、信頼性と共感度が同時に上がる</td>
+            <td>シェア率 +40%、コメント数 +2倍</td>
+          </tr>
+          <tr>
+            <td><strong style="color:#e65100;">中</strong></td>
+            <td>2つのイシューを「AIが奪う2つのもの：意思決定と被リンク」として一本の記事に統合する</td>
+            <td>単体より「構造的連関」を示した記事の方が保存率・引用率が高い（業界研究より）</td>
+            <td>読了率 +5%、被リンク数 +20%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- PDCA 設計 -->
+    <div class="card">
+      <div class="step-label">CDO — PDCA設計</div>
+      <h2>テスト・計測・判断設計</h2>
+
+      <!-- P -->
+      <div class="pdca-phase pdca-p">
+        <div class="pdca-phase-header">
+          <div class="pdca-letter">P</div>
+          <div>
+            <div class="pdca-phase-title">Plan — 何をテストするか</div>
+            <div class="pdca-phase-sub">仮説を立て、テスト設計を確定する</div>
+          </div>
+        </div>
+        <div class="pdca-section-title">テスト仮説</div>
+        <p class="pdca-text">「AIが責任を奪う」という切り口は、マーケター層に「自分事」として刺さるか。<br>また、「問い型フック」と「断言型フック」でどちらが行動変容を促すか。</p>
+        <div class="pdca-section-title">テスト内容</div>
+        <ol class="pdca-list" style="padding-left:20px;list-style:decimal;">
+          <li>X告知ポスト: 「あなたはAIに任せて後悔したことがある？」（問い型）vs「AIはあなたの後悔する能力を奪う」（断言型）でCTR・エンゲージメント率を比較</li>
+          <li>note記事フック: 「後悔する能力」を冒頭に置くバージョン vs 「AIの責任空洞化」統計から入るバージョンで読了率・保存率を比較</li>
+          <li>記事末尾CTA: 「次のnote予告」vs「X体験談募集」でフォロワー転換率・UGC獲得数を比較</li>
+        </ol>
+      </div>
+
+      <!-- D -->
+      <div class="pdca-phase pdca-d">
+        <div class="pdca-phase-header">
+          <div class="pdca-letter">D</div>
+          <div>
+            <div class="pdca-phase-title">Do — 何を実行・計測するか</div>
+            <div class="pdca-phase-sub">実行手順と計測指標・期間を明記する</div>
+          </div>
+        </div>
+        <div class="pdca-section-title">実行ステップ</div>
+        <ol class="pdca-list" style="padding-left:20px;list-style:decimal;">
+          <li>本日中: CCOにnote記事構成（3層フォーマット）を依頼。フック2パターンを同時設計</li>
+          <li>48時間以内: X告知ポスト2パターンを12〜24時間差で投下（同一曜日・時間帯を避ける）</li>
+          <li>記事公開: CPOが本文を制作後、フック2バージョンをnoteの下書き保存で分離管理</li>
+        </ol>
+        <div class="pdca-section-title">計測指標と期間</div>
+        <ul class="pdca-list">
+          <li>Xポスト（公開後72時間）: CTR、インプレッション、エンゲージメント率、返信の質（定性）</li>
+          <li>note記事（公開後7日間）: 保存率、読了率、コメント数、フォロワー転換数</li>
+          <li>UGC（公開後14日間）: 「体験談募集」に対する反応数・引用RT数</li>
+        </ul>
+      </div>
+
+      <!-- C -->
+      <div class="pdca-phase pdca-c">
+        <div class="pdca-phase-header">
+          <div class="pdca-letter">C</div>
+          <div>
+            <div class="pdca-phase-title">Check — どう判断するか</div>
+            <div class="pdca-phase-sub">数値基準と分岐パターンを事前に決めておく</div>
+          </div>
+        </div>
+        <div class="pdca-section-title">判断基準（数値）</div>
+        <p class="pdca-text" style="margin-bottom:10px;">CTR <strong>3.5%以上</strong> かつ 保存率 <strong>12%以上</strong> を両方達成した場合を「有効」と定義する。</p>
+        <div class="pdca-section-title">分岐パターン</div>
+        <div class="judge-grid">
+          <div class="judge-row judge-a">
+            <span class="judge-cond">CTR 3.5%↑ かつ 保存率 12%↑</span>
+            <span class="judge-then">→ テーマ・フォーマット共に有効。採用・教育・医療など隣接領域への横展開を検討</span>
+          </div>
+          <div class="judge-row judge-b">
+            <span class="judge-cond">CTR 3.5%↑ のみ達成</span>
+            <span class="judge-then">→ フック・タイトルは機能している。本文の行動セクションを再設計（具体的事例・テンプレート追加）</span>
+          </div>
+          <div class="judge-row judge-c">
+            <span class="judge-cond">保存率 12%↑ のみ達成</span>
+            <span class="judge-then">→ 内容の価値は確認できた。フック・タイトルを統計ドリブン型に変更して到達数を伸ばす</span>
+          </div>
+          <div class="judge-row judge-d">
+            <span class="judge-cond">両方未達</span>
+            <span class="judge-then">→ フックとイシューを再設計。イシュー#2「ゼロクリック時代のコンテンツ価値」で再試行する</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- A -->
+      <div class="pdca-phase pdca-a">
+        <div class="pdca-phase-header">
+          <div class="pdca-letter">A</div>
+          <div>
+            <div class="pdca-phase-title">Act — 次の打ち手</div>
+            <div class="pdca-phase-sub">結果を踏まえた改善設計と横展開の方向性</div>
+          </div>
+        </div>
+        <div class="pdca-section-title">成功時の横展開</div>
+        <ul class="pdca-list">
+          <li>「AIが責任を代替する」構造を採用・教育・医療などマーケ以外の領域に横展開し、読者層の拡張を検証する</li>
+          <li>UGCとして集まった体験談をもとに「AIが決めて失敗した事例集」を後続コンテンツとして設計する（保存・拡散を両立できるフォーマット）</li>
+        </ul>
+        <div class="pdca-section-title">改善が必要な場合</div>
+        <ul class="pdca-list">
+          <li>「個人が責任を取る仕組みの設計」という実践編HOW記事を次テーマとして設計（イシューを深めず、実行設計に転換）</li>
+          <li>2イシューを「AIが奪う2つのもの：意思決定と被リンク」として統合記事に仕立て直し、構造的連関を読者に示す</li>
+        </ul>
+        <div class="min-exp-box">
+          <div class="min-exp-label">最小実験単位</div>
+          <p>Xで告知ポスト2パターンを48時間差で投稿し、CTRの差を確認する（コスト0・期間2日）。<br>この結果だけで「テーマの反応」と「フック設計の優劣」を同時に検証できる。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 最終評価 -->
+    <div class="card">
+      <div class="step-label">CDO — 最終評価</div>
+      <div class="eval-box">
+        <p><strong>全体評価: A</strong> &nbsp;|&nbsp; <strong>一貫性: Yes</strong> &nbsp;|&nbsp; <strong>差し戻し判定: 差し戻しなし（公開可）</strong></p>
+        <p style="margin-top:10px;"><strong>理由:</strong> CSOのイシュー（AIが意思決定を代替する逆説）→ CCOの構造設計 → CPOの制作 → CDOのPDCA設計が一気通貫で繋がっている。「AIはあなたの後悔する能力を奪う」というコアラインが全体のテンションを保持しており、PDCAの各フェーズが「この仮説を検証するため」という目的で統一されている。</p>
+      </div>
+    </div>
+
+    <div class="footer">Media Company OS — 意思決定レポートシステム &nbsp;|&nbsp; v2 (PDCA再設計版)</div>
+  </div>
+</body>
+</html>
